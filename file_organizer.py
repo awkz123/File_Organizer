@@ -3,6 +3,7 @@ import shutil
 import logging
 from pathlib import Path
 import argparse
+import streamlit as st 
 
 # Mapping of file extensions to folder names
 TYPE_MAP = {
@@ -83,7 +84,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.streamlit:
-        import streamlit as st 
         launch_streamlit_gui()
     elif args.gui:
         launch_tkinter_gui()
