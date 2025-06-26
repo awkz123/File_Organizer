@@ -2,6 +2,8 @@ import os
 import shutil
 import logging
 from pathlib import Path
+import tkinter as tk
+from tkinter import filedialog, messagebox
 import argparse
 
 # Mapping of file extensions to folder names
@@ -57,6 +59,35 @@ def organize_downloads(folder_path: Path, dry_run=False):
                 logging.info(f"Moved {file_path} to {dest}")
                 print(f"Moved {file_path} to {OTHER_FOLDER}/")
 
+# if you want to use tkinter
+def launch_tkinter_gui():
+    def browse_folder():
+        path = filedialog.askdirectory()
+        if path:
+            folder_var.set(path)
+
+    def run_organizer():
+        path = folder_var.get()
+        dry = dry_var.get()
+        if path:
+            organize_downloads(Path(path), dry_run=dry)
+            messagebox.showinfo("Done", "Organization complete. Check logs for details.")
+        else:
+            messagebox.showerror("Error", "Please select a folder.")
+
+    root = tk.Tk()
+    root.title("Downloads Organizer")
+
+    folder_var = tk.StringVar()
+    dry_var = tk.BooleanVar()
+
+    tk.Label(root, text="Select folder to organize:").pack(padx=10, pady=5)
+    tk.Entry(root, textvariable=folder_var, width=50).pack(padx=10)
+    tk.Button(root, text="Browse", command=browse_folder).pack(pady=5)
+    tk.Checkbutton(root, text="Dry Run (Preview Only)", variable=dry_var).pack(pady=5)
+    tk.Button(root, text="Organize", command=run_organizer).pack(pady=10)
+
+    root.mainloop()
 
 #if you want to use streamlit
 def launch_streamlit_gui():
@@ -86,6 +117,8 @@ if __name__ == '__main__':
     if args.streamlit:
         import streamlit as st 
         launch_streamlit_gui()
+    elif args.gui:
+        launch_tkinter_gui()
     else:
         target_path = Path(args.path) if args.path else Path.home() / 'Downloads'
         organize_downloads(target_path, dry_run=args.dry_run)
