@@ -2,8 +2,6 @@ import os
 import shutil
 import logging
 from pathlib import Path
-import tkinter as tk
-from tkinter import filedialog, messagebox
 import argparse
 
 # Mapping of file extensions to folder names
@@ -118,6 +116,8 @@ if __name__ == '__main__':
         import streamlit as st 
         launch_streamlit_gui()
     elif args.gui:
+        import tkinter as tk
+        from tkinter import filedialog, messagebox
         launch_tkinter_gui()
     else:
         target_path = Path(args.path) if args.path else Path.home() / 'Downloads'
